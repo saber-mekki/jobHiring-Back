@@ -14,9 +14,10 @@ export const getUserController = async (req: Request, res: Response) => {
 };
 
 export const addUserController = async (req: Request, res: Response) => {
-  const { login, password } = req.body
+  const { login, password, phone,gender,name } = req.body
   try {
-    await addUser(login as string, password as string);
+ 
+    await addUser(login as string, password as string,phone as number,gender  as string,name  as string);
     res.status(200).send("ok");
   } catch (error) {
     console.log(error);
