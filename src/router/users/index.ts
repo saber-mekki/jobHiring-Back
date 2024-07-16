@@ -27,6 +27,18 @@ const router = express.Router();
  *                 type: string
  *                 example: "password123"
  *                 required: true
+ *               phone:
+ *                 type: number
+ *                 example: "12354"
+ *                 required: false
+ *               gender:
+ *                 type: string
+ *                 example: "male"
+ *                 required: true
+ *               name:
+ *                 type: string
+ *                 example: "x"
+ *                 required: true
  *     responses:
  *       200:
  *         description: User added successfully
