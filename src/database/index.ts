@@ -5,7 +5,7 @@ env.config();
 
 const pool = new Pool({
 	connectionString:
-		"postgres://postgres:0000@vps-c237dc1a.vps.ovh.net:5432/SPP",
+		"postgres://postgres:40002379@localhost:5432/userDB",
 });
 
 export async function executeSQLQuery(SQL: string): Promise<QueryResult<any>> {
