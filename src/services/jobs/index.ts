@@ -9,10 +9,13 @@ export const getJob = async (jobId: string) => {
 	return result.rows;
 };
 
-export const addJob = async (email: string, companyName: string, jobTitle : string,location  : string, phone  : number,salary:number, deadline : string,jobType  : string) => {
-    const query = `INSERT INTO public."jobTable"(email, "companyName", "jobTitle" ,location  ,phone , salary,deadline,"jobType") VALUES ('${email}','${companyName}','${jobTitle}','${location}','${phone}','${salary}','${deadline}','${jobType}')`;
-    const result = await executeSQLQuery(query);
-    return result.rows[0];
+export const addJob = async (email: string, companyName: string, jobTitle : string,
+    location  : string, phone  : number,salary:number, deadline : string,jobType  : string ,
+    description:string,recuirement :string, resposibilities : string) => {
+    const query = `INSERT INTO public."jobTable"(email, "companyName", "jobTitle" ,location  ,phone , salary,deadline,"jobType","description","recuirement","resposibilities")
+     VALUES ('${email}','${companyName}','${jobTitle}','${location}','${phone}','${salary}','${deadline}','${jobType}','${description}','${recuirement}','${resposibilities}')`;
+     const result = await executeSQLQuery(query);
+     return result.rows[0];
 };
 
 export const deleteJob = async (jobTitle: string) => {

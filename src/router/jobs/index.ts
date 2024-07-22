@@ -95,6 +95,19 @@ router1.route("/jobs").get(getJobController);
  *                 type: number
  *                 example: "12"
  *                 required: true
+ *               description:
+ *                 type: string
+ *                 example: "full time"
+ *                 required: true
+ *               recuirement:
+ *                 type: string
+ *                 example: "full time"
+ *                 required: true
+ *               resposibilities:
+ *                 type: string
+ *                 example: "full time"
+ *                 required: true
+ * 
  *     responses:
  *       200:
  *         description: Job added successfully

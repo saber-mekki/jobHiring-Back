@@ -21,10 +21,10 @@ export const getJobController = async (req: any, res: Response) => {
 };
 
 export const addJobController = async (req: Request, res: Response) => {
-  const { email, companyName, jobTitle,location,phone, salary, deadline , jobType } = req.body
+  const { email, companyName, jobTitle,location,phone, salary, deadline , jobType,description,recuirement,resposibilities } = req.body
   try {
  
-    await addJob(email as string, companyName as string, jobTitle as string,location  as string, phone  as number,salary as number, deadline as string,jobType  as  string);
+    await addJob(email as string, companyName as string, jobTitle as string,location  as string, phone  as number,salary as number, deadline as string,jobType  as  string , description as string ,recuirement as string, resposibilities as string);
    
     res.status(200).send("ok");
   } catch (error) {
