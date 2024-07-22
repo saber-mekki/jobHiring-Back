@@ -161,6 +161,37 @@ router.route("/addJob").post(addJobController);
  */
 router.route("/getJob").get(getJobController);
 
+
+/**
+ * @swagger
+ * /jobs:
+ *   get:
+ *     summary: get a the list of jobs
+ *     tags: [Jobs]
+ *     parameters:
+ *        - in: query
+ *          name: jobId
+ *          required: false
+ *          schema:
+ *            type: string
+ *     responses:
+ *       200:
+ *         description: ok
+ *         content:
+ *           application/json:
+ *             schema:
+ *                type: object
+ *       500:
+ *         description: error
+ *         content:
+ *           application/json:
+ *             schema:
+ *                type: object
+ *
+ *
+ */
+router.route("jobs").get(getJobController);
+
 /**
  * @swagger
  * /deleteJob:

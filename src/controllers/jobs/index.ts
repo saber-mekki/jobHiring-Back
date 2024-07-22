@@ -2,10 +2,11 @@ import { addJob, deleteJob, getJob } from "../../services/jobs";
 import { Request, Response } from "express";
 
 export const getJobController = async (req: Request, res: Response) => {
-  const { } = req.body
+
+  const { jobId } = req.body;
 
   try {
-    const result = await getJob();
+    const result = await getJob(jobId);
     res.status(200).json(result);
   } catch (error) {
     console.log(error);
