@@ -3,10 +3,16 @@ import env from "dotenv";
 
 env.config();
 
-const pool = new Pool({
+export const pool = new Pool({
 	connectionString:
-		"postgres://postgres:40002379@localhost:5432/userDB",
+		"postgres://postgres:0000@148.113.182.116:5432/postgres",
 });
+export const pool1 = new Pool({
+	connectionString:
+		"postgres://postgres:0000@148.113.182.116:5432/postgres",
+
+});
+
 
 export async function executeSQLQuery(SQL: string): Promise<QueryResult<any>> {
   return new Promise<QueryResult>((resolve, reject) => {
@@ -20,4 +26,4 @@ export async function executeSQLQuery(SQL: string): Promise<QueryResult<any>> {
   });
 }
 
-export default pool;
+
