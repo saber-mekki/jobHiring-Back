@@ -7,7 +7,7 @@ export const getJobController = async (req: Request, res: Response) => {
 
   try {
     const result = await getJob(jobId);
-    res.status(200).json(result);
+    res.status(200).json({data:result});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error });

@@ -2,15 +2,45 @@ import express from "express";
 import { addJobController, deleteJobController, getJobController } from "../../controllers/jobs";
 
 
-const router = express.Router();
+const router1 = express.Router();
 
+
+/**
+ * @swagger
+ * /jobs:
+ *   get:
+ *     summary: get a the list of jobs
+ *     tags: [Jobs]
+ *     parameters:
+ *        - in: query
+ *          name: jobId
+ *          required: false
+ *          schema:
+ *            type: string
+ *     responses:
+ *       200:
+ *         description: ok
+ *         content:
+ *           application/json:
+ *             schema:
+ *                type: object
+ *       500:
+ *         description: error
+ *         content:
+ *           application/json:
+ *             schema:
+ *                type: object
+ *
+ *
+ */
+router1.route("/jobs").get(getJobController);
 
 /**
  * @swagger
  * /addJob:
  *   post:
  *     summary: Add a new job
- *     tags: [User]
+ *     tags: [Jobs]
  *     requestBody:
  *       description: job name and description
  *       required: true
@@ -87,14 +117,14 @@ const router = express.Router();
  *                   type: string
  *                   example: "Internal server error"
  */
-router.route("/addJob").post(addJobController);
+router1.route("/addJob").post(addJobController);
 
 /**
  * @swagger
  * /getJob:
  *   get:
  *     summary: get a job by name
- *     tags: [User]
+ *     tags: [Jobs]
  *     requestBody:
  *       description: job description
  *       required: true
@@ -159,45 +189,14 @@ router.route("/addJob").post(addJobController);
  *                   type: string
  *                   example: "Internal server error"
  */
-router.route("/getJob").get(getJobController);
-
-
-/**
- * @swagger
- * /jobs:
- *   get:
- *     summary: get a the list of jobs
- *     tags: [Jobs]
- *     parameters:
- *        - in: query
- *          name: jobId
- *          required: false
- *          schema:
- *            type: string
- *     responses:
- *       200:
- *         description: ok
- *         content:
- *           application/json:
- *             schema:
- *                type: object
- *       500:
- *         description: error
- *         content:
- *           application/json:
- *             schema:
- *                type: object
- *
- *
- */
-router.route("jobs").get(getJobController);
+router1.route("/getJob").get(getJobController);
 
 /**
  * @swagger
  * /deleteJob:
  *   delete:
  *     summary: Delete a job by id
- *     tags: [User]
+ *     tags: [Jobs]
  *     parameters:
  *       - in: query
  *         name: id
@@ -237,7 +236,7 @@ router.route("jobs").get(getJobController);
  *                   type: string
  *                   example: "Internal server error"
  */
-router.route("/deleteJob").delete(deleteJobController);
+router1.route("/deleteJob").delete(deleteJobController);
 
 
-export default router;
+export default router1;
