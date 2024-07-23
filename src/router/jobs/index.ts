@@ -17,6 +17,16 @@ const router1 = express.Router();
  *          required: false
  *          schema:
  *            type: string
+ *        - in: query
+ *          name: page
+ *          required: false
+ *          schema:
+ *            type: string
+ *        - in: query
+ *          name: pageSize
+ *          required: false
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: ok

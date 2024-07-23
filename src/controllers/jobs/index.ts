@@ -1,13 +1,19 @@
 import { addJob, deleteJob, getJob } from "../../services/jobs";
 import { Request, Response } from "express";
 
-export const getJobController = async (req: Request, res: Response) => {
-
-  const { jobId } = req.body;
-
+export const getJobController = async (req: any, res: Response) => {
+  const page:any = parseInt(req.query.page) || 1;
+	const pageSize = parseInt(req.query.pageSize) || 10;
+   const jobId:any = parseInt(req.query.jobId) ||undefined
+   
   try {
+        const startIndex = (page - 1) * pageSize;
+				const endIndex = startIndex + pageSize;
     const result = await getJob(jobId);
-    res.status(200).json({data:result});
+     const paginatedJobs = result.slice(startIndex, endIndex);
+    res
+			.status(200)
+			.json({ data: paginatedJobs, total: result.length, page, pageSize });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error });
