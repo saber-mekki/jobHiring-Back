@@ -107,6 +107,10 @@ router1.route("/jobs").get(getJobController);
  *                 type: string
  *                 example: "full time"
  *                 required: true
+ *               field:
+ *                 type: string
+ *                 example: "field sss"
+ *                 required: true
  * 
  *     responses:
  *       200:
@@ -141,78 +145,6 @@ router1.route("/jobs").get(getJobController);
  *                   example: "Internal server error"
  */
 router1.route("/addJob").post(addJobController);
-
-/**
- * @swagger
- * /getJob:
- *   get:
- *     summary: get a job by name
- *     tags: [Jobs]
- *     requestBody:
- *       description: job description
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: number
- *                 example: "12"
- *                 required: true
- *               name:
- *                 type: string
- *                 example: "developper"
- *                 required: true
- *               location:
- *                 type: string
- *                 example: "golaa"
- *                 required: true
- *               salary:
- *                 type: string
- *                 example: "1000 $"
- *                 required: false
- *               subject:
- *                 type: string
- *                 example: "frontend developper"
- *                 required: true
- *               description:
- *                 type: string
- *                 example: "x"
- *                 required: true
- *     responses:
- *       200:
- *         description: Job getted successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
- *       404:
- *         description: Not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "User not found"
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Internal server error"
- */
-router1.route("/getJob").get(getJobController);
 
 /**
  * @swagger

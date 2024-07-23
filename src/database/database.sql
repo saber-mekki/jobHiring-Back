@@ -19,8 +19,9 @@ CREATE TABLE jobTable
     phone INTEGER,
     salary INTEGER,
     jobType VARCHAR(255),
-     deadline  DATE,
-         description VARCHAR(255),
+    deadline  DATE,
+    description VARCHAR(255),
     recuirement VARCHAR(255),
-    resposibilities VARCHAR(255)
-)
+    resposibilities VARCHAR(255),
+    field VARCHAR(255)
+);
