@@ -6,7 +6,8 @@ export const getUserController = async (req: Request, res: Response) => {
 
   try {
     const result = await getUser(login as string, password as string);
-    res.status(200).json(result);
+    let error =result[0] === undefined?true:false 
+    res.status(200).send({error:error,data:[]});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error });
