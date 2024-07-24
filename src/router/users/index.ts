@@ -35,6 +35,10 @@ const router = express.Router();
  *                 type: string
  *                 example: "male"
  *                 required: true
+ *               registerType:
+ *                 type: string
+ *                 example: "male"
+ *                 required: true
  *               name:
  *                 type: string
  *                 example: "x"

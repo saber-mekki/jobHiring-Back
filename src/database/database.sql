@@ -7,6 +7,7 @@ CREATE TABLE userTable(
   phone INTEGER,
   gender VARCHAR(255),
   password VARCHAR(255)
+  registerType VARCHAR(255)
 );
 
 CREATE TABLE jobTable
