@@ -1,5 +1,12 @@
 import { executeSQLQuery } from "../../database";
 
+const formatDateString = (date:any) => {
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+	return `${year}-${month}-${day}`;
+};
+
 export const getBooking = async (bookingId: string) => {
     let query;
     if (bookingId ===undefined) { query = `SELECT * FROM public."bookingTable"`;}else {
@@ -10,7 +17,8 @@ export const getBooking = async (bookingId: string) => {
 };
 
 export const addBooking = async (firstName:string,  lastName:string,  nationality:string,  jobType:string,  phone:number,  seekedSalary:number,  email:string,  description:string,  bookingDate:Date) => {
-    const query = `INSERT INTO public."bookingTable"(firstName,  "lastName",  "nationality",  "jobType",  phone,  seekedSalary,  email,  description,  bookingDate) VALUES ('${firstName}', '${lastName}', '${nationality}', '${jobType}', ${phone}, ${seekedSalary}, '${email}', '${description}', '${bookingDate}') RETURNING *`;
+    const formattedDate = formatDateString(new Date(bookingDate));
+    const query = `INSERT INTO public."bookingTable"("firstName",  "lastName",  "nationality",  "jobType",  phone,  "seekedSalary",  email,  description,  "bookingDate") VALUES ('${firstName}', '${lastName}', '${nationality}', '${jobType}', ${phone}, ${seekedSalary}, '${email}', '${description}', '${formattedDate}') RETURNING *`;
     const result = await executeSQLQuery(query);
     return result.rows[0];
 };

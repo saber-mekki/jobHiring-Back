@@ -25,7 +25,7 @@ export const addBookingController = async (req: Request, res: Response) => {
     description,
     bookingDate
   } = req.body;
-console.log(req)
+
   try {
     const newBooking = await addBooking(
       firstName as string,
