@@ -11,9 +11,9 @@ export const getJob = async (jobId: string) => {
 
 export const addJob = async (email: string, companyName: string, jobTitle : string,
     location  : string, phone  : number,salary:number, deadline : string,jobType  : string ,
-    description:string,recuirement :string, resposibilities : string ,field : string) => { 
-    const query = `INSERT INTO public."jobTable"(email, "companyName", "jobTitle" ,location  ,phone , salary,deadline,"jobType","description","recuirement","resposibilities","field")
-     VALUES ('${email}','${companyName}','${jobTitle}','${location}','${phone}','${salary}','${deadline}','${jobType}','${description}','${recuirement}','${resposibilities}','${field}')`;
+    description:string,recuirement :string, responsibilities : string ,field : string) => { 
+    const query = `INSERT INTO public."jobTable"(email, "companyName", "jobTitle" ,location  ,phone , salary,deadline,"jobType","description","recuirement","responsibilities","field")
+     VALUES ('${email}','${companyName}','${jobTitle}','${location}','${phone}','${salary}','${deadline}','${jobType}','${description}','${recuirement}','${responsibilities}','${field}')`;
     
      const result = await executeSQLQuery(query);
      return result.rows[0];

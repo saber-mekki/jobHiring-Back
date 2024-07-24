@@ -103,7 +103,7 @@ router1.route("/jobs").get(getJobController);
  *                 type: string
  *                 example: "full time"
  *                 required: true
- *               resposibilities:
+ *               responsibilities:
  *                 type: string
  *                 example: "full time"
  *                 required: true

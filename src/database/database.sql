@@ -22,6 +22,6 @@ CREATE TABLE jobTable
     deadline  DATE,
     description VARCHAR(255),
     recuirement VARCHAR(255),
-    resposibilities VARCHAR(255),
+    responsibilities VARCHAR(255),
     field VARCHAR(255)
 );
