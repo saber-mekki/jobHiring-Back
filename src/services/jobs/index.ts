@@ -1,19 +1,31 @@
 import { executeSQLQuery } from "../../database";
 
-export const getJob = async (jobId: string) => {
+export const getJob = async (jobTitle?: string) => {
     let query;
-    if (jobId ===undefined) { query = `SELECT * FROM public."jobTable"`;}else {
-        query = `SELECT * FROM public."jobTable" where id = '${jobId}'`; 
+    if (!jobTitle) {
+        query = 'SELECT * FROM public."jobTable";'; // Récupérer tous les jobs
+    } else {
+        query = `SELECT * FROM public."jobTable" WHERE "jobTitle" = '${jobTitle}';`; // Récupérer le job par jobTitle
     }
-	const result = await executeSQLQuery(query);
-	return result.rows;
+    const result = await executeSQLQuery(query);
+    return result.rows; // Retourner les résultats
 };
 
-export const addJob = async (email: string, companyName: string, jobTitle : string,
-    location  : string, phone  : number,salary:number, deadline : string,jobType  : string ,
-    description:string,recuirement :string, resposibilities : string ,field : string) => { 
-    const query = `INSERT INTO public."jobTable"(email, "companyName", "jobTitle" ,location  ,phone , salary,deadline,"jobType","description","recuirement","resposibilities","field")
-     VALUES ('${email}','${companyName}','${jobTitle}','${location}','${phone}','${salary}','${deadline}','${jobType}','${description}','${recuirement}','${resposibilities}','${field}')`;
+export const addJob = async (
+    email: string,
+    companyName: string,
+    jobTitle : string,
+    location  : string,
+    phone  : string,
+    salary:string,
+    deadline : string,
+    jobType  : string ,
+    description:string,
+    requirement :string,
+    resposibilities : string ,
+    field : string) => { 
+    const query = `INSERT INTO public."jobTable"(email, "companyName", "jobTitle" ,location  ,phone , salary,deadline,"jobType","description","requirement","resposibilities","field")
+     VALUES ('${email}','${companyName}','${jobTitle}','${location}','${phone}','${salary}','${deadline}','${jobType}','${description}','${requirement}','${resposibilities}','${field}')`;
     
      const result = await executeSQLQuery(query);
      return result.rows[0];

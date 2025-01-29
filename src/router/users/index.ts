@@ -28,7 +28,7 @@ const router = express.Router();
  *                 example: "password123"
  *                 required: true
  *               phone:
- *                 type: number
+ *                 type: string
  *                 example: "12354"
  *                 required: false
  *               gender:
@@ -39,6 +39,11 @@ const router = express.Router();
  *                 type: string
  *                 example: "x"
  *                 required: true
+ *               registerType:
+ *                 type: string
+ *                 example: "applicant"
+ *                 required: true
+ * 
  *     responses:
  *       200:
  *         description: User added successfully
@@ -95,6 +100,7 @@ router.route("/addUser").post(addUserController);
  *                 type: string
  *                 example: "password123"
  *                 required: true
+ * 
  *     responses:
  *       200:
  *         description: User logged in successfully

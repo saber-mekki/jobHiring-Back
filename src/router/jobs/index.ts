@@ -13,7 +13,7 @@ const router1 = express.Router();
  *     tags: [Jobs]
  *     parameters:
  *        - in: query
- *          name: jobId
+ *          name: jobTitle
  *          required: false
  *          schema:
  *            type: string
@@ -76,30 +76,26 @@ router1.route("/jobs").get(getJobController);
  *                 example: "frontend developper"
  *                 required: true
  *               salary:
- *                 type: number
+ *                 type: string
  *                 example: "12345"
  *                 required: true
  *               deadline:
  *                 type: string
- *                 example: "frontend developper"
+ *                 example: "2024-12-31"
  *                 required: true
  *               jobType:
  *                 type: string
  *                 example: "full time"
  *                 required: true
  *               phone:
- *                 type: number
+ *                 type: string
  *                 example: "12565"
- *                 required: true
- *               id:
- *                 type: number
- *                 example: "12"
  *                 required: true
  *               description:
  *                 type: string
  *                 example: "full time"
  *                 required: true
- *               recuirement:
+ *               requirement:
  *                 type: string
  *                 example: "full time"
  *                 required: true
@@ -150,13 +146,13 @@ router1.route("/addJob").post(addJobController);
  * @swagger
  * /deleteJob:
  *   delete:
- *     summary: Delete a job by id
+ *     summary: Delete a job by name
  *     tags: [Jobs]
  *     parameters:
  *       - in: query
- *         name: id
+ *         name: jobName
  *         schema:
- *           type: number
+ *           type: string
  *         required: true
  *         description: The job deleted
  *     responses:
