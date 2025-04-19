@@ -8,29 +8,41 @@
     "start": "nodemon src/index.ts"
   },
   "devDependencies": {
-    "@types/node": "^15.6.1",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^20.11.0",
+    "@types/nodemailer": "^6.4.17",
     "autoprefixer": "^10.4.20",
-    "nodemon": "^2.0.7",
+    "nodemon": "^3.0.2",
     "postcss": "^8.5.1",
     "tailwindcss": "^4.0.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^1.1.6",
-    "typescript": "^4.3.2"
+    "typescript": "^5.3.3"
   },
   "dependencies": {
     "@fontsource/roboto": "^5.1.1",
     "@types/cors": "^2.8.10",
     "@types/express": "^4.17.12",
-    "@types/pg": "^8.6.0",
+    "@types/pg": "^8.11.11",
     "@types/swagger-jsdoc": "^6.0.1",
     "@types/swagger-ui-express": "^4.1.3",
+    "bcryptjs": "^3.0.2",
     "body-parser": "^1.19.0",
+    "child-process-promise": "^2.2.1",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.19.2",
-    "pg": "^8.6.0",
+    "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.2",
+    "nodemailer": "^6.10.1",
+    "pg": "8.11.0",
+    "pgvector": "^0.2.0",
+    "python-shell": "^5.0.0",
+    "react-toastify": "^11.0.5",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.2.0",
-    "typescript-rest": "^3.0.2"
+    "typescript-rest": "^1.7.0"
   }
 }

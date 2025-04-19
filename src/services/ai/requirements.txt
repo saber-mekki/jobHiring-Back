@@ -1,0 +1,4 @@
+pdfminer.six==20221105  # Version stable compatible
+python-docx==1.1.0
+sentence-transformers==2.6.1
+psycopg2-binary==2.9.9  

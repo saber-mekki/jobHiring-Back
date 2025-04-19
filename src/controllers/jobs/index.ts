@@ -1,37 +1,45 @@
-import { addJob, deleteJob, getJob } from "../../services/jobs";
+// controllers/jobs.ts
+import { addJob, deleteJob, getJob, updateJob } from "../../services/jobs";
 import { Request, Response } from "express";
+import multer from "multer";
+import path from "path";
+
+// Configuration de Multer pour enregistrer les fichiers localement
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Dossier où enregistrer les fichiers
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Nom unique
+  },
+});
+
+const upload = multer({ storage: storage });
 
 export const getJobController = async (req: Request, res: Response) => {
-    const page: number = parseInt(req.query.page as string) || 1; // Assurez-vous que 'page' est un nombre
-    const pageSize: number = parseInt(req.query.pageSize as string) || 10; // 'pageSize' est aussi un nombre
-    const jobTitle: string | undefined = typeof req.query.jobTitle === 'string' 
-        ? req.query.jobTitle.trim().toLowerCase() // Normaliser si c'est une chaîne de caractères
-        : undefined;
+  const page = parseInt(req.query.page as string) || 1;
+  const pageSize = parseInt(req.query.pageSize as string) || 10;
+  const jobId = req.query.jobId ? parseInt(req.query.jobId as string) : undefined;
 
-    try {
-        // Récupérer les résultats de la base de données (tous les jobs ou filtrés par jobTitle)
-        const result = await getJob(jobTitle);
-        
-        // Calculer l'index de début et de fin pour la pagination
-        const startIndex = (page - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
+  if (jobId && isNaN(jobId)) {
+    return res.status(400).json({ error: "Invalid jobId format" });
+  }
 
-        // Appliquer la pagination
-        const paginatedJobs = result.slice(startIndex, endIndex);
-        
-        // Réponse avec les jobs paginés
-        res.status(200).json({
-            data: paginatedJobs,
-            total: result.length,
-            page,
-            pageSize
-        });
-    } catch (error) {
-        console.error("Error fetching jobs:", error); // Ajout d'un log pour les erreurs
-        return res.status(500).json({
-            error: "Internal server error" // Message d'erreur générique
-        });
-    }
+  try {
+    const result = await getJob(jobId);
+    const startIndex = (page - 1) * pageSize;
+    const paginatedJobs = result.slice(startIndex, startIndex + pageSize);
+
+    res.status(200).json({
+      data: paginatedJobs,
+      total: result.length,
+      page,
+      pageSize,
+    });
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 export const addJobController = async (req: Request, res: Response) => {
@@ -46,39 +54,82 @@ export const addJobController = async (req: Request, res: Response) => {
     jobType,
     description,
     requirement,
-    resposibilities,
+    resposibilities, // Correction du nom de la variable
     field,
   } = req.body;
 
+  const logo = req.file ? req.file.filename : null;
+
   try {
     await addJob(
-      email,
-      companyName,
-      jobTitle,
-      location,
-      phone,
-      salary,
-      deadline,
-      jobType,
-      description,
-      requirement,
-      resposibilities,
-      field
+      email, companyName, jobTitle, location, phone, salary, deadline, jobType, 
+      description, requirement, resposibilities, field, logo
     );
-    res.status(200).send("Job added successfully.");
+    res.status(200).json({ message: "Job added successfully." });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error });
+    console.error("Error adding job:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
 export const deleteJobController = async (req: Request, res: Response) => {
-  const { jobTitle } = req.query;
+  const jobId = req.query.jobId ? parseInt(req.query.jobId as string) : undefined;
+
+  if (!jobId || isNaN(jobId)) {
+    return res.status(400).json({ error: "Invalid or missing jobId" });
+  }
+
   try {
-    await deleteJob(jobTitle as string );
-    res.status(200).send("ok");
+    const deletedJob = await deleteJob(jobId);
+    if (!deletedJob) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+    res.status(200).json({ message: "Job deleted successfully." });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: error });
+    console.error("Error deleting job:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const updateJobController = async (req: Request, res: Response) => {
+  const jobId = parseInt(req.body.jobId);
+  if (!jobId || isNaN(jobId)) {
+    return res.status(400).json({ error: "Invalid or missing jobId" });
+  }
+
+  const {
+    email,
+    companyName,
+    jobTitle,
+    location,
+    phone,
+    salary,
+    deadline,
+    jobType,
+    description,
+    requirement,
+    resposibilities, // Correction du nom de la variable
+    field,
+  } = req.body;
+
+  const logo = req.file ? req.file.filename : null;
+
+  try {
+    const updatedJob = await updateJob(
+      jobId, email, companyName, jobTitle, location, phone, salary, 
+      deadline, jobType, description, requirement, resposibilities, field, logo
+    );
+    
+    if (!updatedJob) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+    
+    res.status(200).json({ message: "Job updated successfully", data: updatedJob });
+  } catch (error) {
+    console.error("Error updating job:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Middleware pour l'upload de fichier
+export const uploadMiddleware = upload.single("logo");

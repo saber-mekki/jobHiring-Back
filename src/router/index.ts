@@ -3,15 +3,20 @@ import path from "path";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
 
-import users from "./users"
+
+import comments from "./comment"
+import users from "./users";
 import jobs from "./jobs";
+import interview from "./interviews";
+import blogs from "./blog"
+import matching from "./matching"
 
 export default (app: Application) => {
   const options = {
     definition: {
       openapi: "3.0.0",
       info: {
-        title: "Saber API",
+        title: "Rayen API",
         version: "1.0.0",
         description:
           "This page is dedicated to the route list in the application",
@@ -38,5 +43,10 @@ export default (app: Application) => {
     res.json({ message: "API Running ! " });
   });
 
-  app.use("/api/v1/", [users, jobs]);
-};
+
+  app.use("/api/v1/users", users);
+  app.use("/api/v1", jobs);
+  app.use("/api/v1/interviews", interview);
+  app.use("/api/v1", blogs);
+  app.use("/api/v1/comments", comments);
+  app.use("/api/v1", matching);};

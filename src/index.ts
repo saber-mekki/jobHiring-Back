@@ -10,7 +10,7 @@ registerRouter(app);
 
 config();
 
-const PORT: string | number = process.env.PORT || 5000;
+const PORT: string | number = process.env.PORT || 5001;
 const ENV: string = process.env.NODE_ENV || "development";
 
 app.listen(PORT, () =>

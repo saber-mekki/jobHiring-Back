@@ -1,47 +1,55 @@
 import express from "express";
-import { addJobController, deleteJobController, getJobController } from "../../controllers/jobs";
-
+import multer from "multer";
+import { 
+  addJobController, 
+  deleteJobController, 
+  getJobController, 
+  updateJobController 
+} from "../../controllers/jobs";
 
 const router1 = express.Router();
+
+// Configuration de multer pour stocker les fichiers sur disque
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // Sauvegarde les fichiers dans le dossier "uploads"
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname); // Renommer le fichier pour éviter les conflits
+  },
+});
+
+const upload = multer({ storage: storage });
+
 
 
 /**
  * @swagger
  * /jobs:
  *   get:
- *     summary: get a the list of jobs
+ *     summary: Get the list of jobs
  *     tags: [Jobs]
  *     parameters:
- *        - in: query
- *          name: jobTitle
- *          required: false
- *          schema:
- *            type: string
- *        - in: query
- *          name: page
- *          required: false
- *          schema:
- *            type: string
- *        - in: query
- *          name: pageSize
- *          required: false
- *          schema:
- *            type: string
+ *       - in: query
+ *         name: jobId
+ *         required: false
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: pageSize
+ *         required: false
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
- *         description: ok
- *         content:
- *           application/json:
- *             schema:
- *                type: object
+ *         description: List of jobs retrieved successfully
  *       500:
- *         description: error
- *         content:
- *           application/json:
- *             schema:
- *                type: object
- *
- *
+ *         description: Internal server error
  */
 router1.route("/jobs").get(getJobController);
 
@@ -52,142 +60,122 @@ router1.route("/jobs").get(getJobController);
  *     summary: Add a new job
  *     tags: [Jobs]
  *     requestBody:
- *       description: job name and description
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
  *               email:
  *                 type: string
- *                 example: "developper"
- *                 required: true
  *               companyName:
  *                 type: string
- *                 example: "zzz"
- *                 required: true
  *               jobTitle:
  *                 type: string
- *                 example: "job"
- *                 required: false
  *               location:
  *                 type: string
- *                 example: "frontend developper"
- *                 required: true
  *               salary:
  *                 type: string
- *                 example: "12345"
- *                 required: true
  *               deadline:
  *                 type: string
- *                 example: "2024-12-31"
- *                 required: true
  *               jobType:
  *                 type: string
- *                 example: "full time"
- *                 required: true
  *               phone:
  *                 type: string
- *                 example: "12565"
- *                 required: true
  *               description:
  *                 type: string
- *                 example: "full time"
- *                 required: true
  *               requirement:
  *                 type: string
- *                 example: "full time"
- *                 required: true
- *               resposibilities:
+ *               responsibilities:
  *                 type: string
- *                 example: "full time"
- *                 required: true
  *               field:
  *                 type: string
- *                 example: "field sss"
- *                 required: true
- * 
+ *               logo:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: Job added successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Job added successfully"
- *       404:
- *         description: Not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Job not found"
  *       500:
  *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Internal server error"
  */
-router1.route("/addJob").post(addJobController);
+router1.route("/addJob").post(upload.single("logo"), addJobController);
 
 /**
  * @swagger
  * /deleteJob:
  *   delete:
- *     summary: Delete a job by name
+ *     summary: Delete a job by ID
  *     tags: [Jobs]
  *     parameters:
  *       - in: query
- *         name: jobName
+ *         name: jobId
  *         schema:
- *           type: string
+ *           type: integer
  *         required: true
- *         description: The job deleted
+ *         description: The job ID to delete
  *     responses:
  *       200:
  *         description: Job deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "job deleted successfully"
  *       404:
- *         description: Not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "job not found"
+ *         description: Job not found
  *       500:
  *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "Internal server error"
  */
 router1.route("/deleteJob").delete(deleteJobController);
 
+/**
+ * @swagger
+ * /updateJob:
+ *   put:
+ *     summary: Update an existing job
+ *     tags: [Jobs]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               jobId:
+ *                 type: integer
+ *               email:
+ *                 type: string
+ *               companyName:
+ *                 type: string
+ *               jobTitle:
+ *                 type: string
+ *               location:
+ *                 type: string
+ *               salary:
+ *                 type: string
+ *               deadline:
+ *                 type: string
+ *               jobType:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               requirement:
+ *                 type: string
+ *               responsibilities:
+ *                 type: string
+ *               field:
+ *                 type: string
+ *               logo:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Job updated successfully
+ *       400:
+ *         description: Invalid request data
+ *       404:
+ *         description: Job not found
+ *       500:
+ *         description: Internal server error
+ */
+router1.route("/updateJob").put(upload.single("logo"), updateJobController);
 
 export default router1;
