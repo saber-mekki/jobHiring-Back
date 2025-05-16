@@ -10,6 +10,9 @@ import jobs from "./jobs";
 import interview from "./interviews";
 import blogs from "./blog"
 import matching from "./matching"
+import chatRouter from './users/chat';
+import adminRouter from "./users/admin";
+import ApplicationsRouter from "./applications";
 
 export default (app: Application) => {
   const options = {
@@ -42,8 +45,9 @@ export default (app: Application) => {
   app.get("/", (req, res) => {
     res.json({ message: "API Running ! " });
   });
-
-
+  app.use('/api/v1/applications',ApplicationsRouter)
+  app.use('/api/v1/chat', chatRouter);
+  app.use("/api/v1/admin", adminRouter);
   app.use("/api/v1/users", users);
   app.use("/api/v1", jobs);
   app.use("/api/v1/interviews", interview);

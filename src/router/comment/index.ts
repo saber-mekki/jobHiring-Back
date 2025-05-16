@@ -1,5 +1,5 @@
 import express from "express";
-import { addCommentController, deleteCommentController, getCommentController,updateCommentController } from "../../controllers/comment";
+import { addCommentController, deleteCommentController, getCommentController,likeCommentController,updateCommentController } from "../../controllers/comment";
 
 import multer from "multer";
 
@@ -9,7 +9,7 @@ const router4 = express.Router();
 // Configuration de multer pour stocker les fichiers sur disque
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Sauvegarde les fichiers dans le dossier "uploads"
+    cb(null, "src/uploads/"); // Sauvegarde les fichiers dans le dossier "uploads"
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname); // Renommer le fichier pour éviter les conflits
@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 /**
  * @swagger
- * /comment:
+ * comments/comment:
  *   get:
  *     summary: get a the list of comments
  *     tags: [Comments]
@@ -59,7 +59,7 @@ router4.route("/comment").get(getCommentController);
 
 /**
  * @swagger
- * /addComment:
+ * /comments/addComment:
  *   post:
  *     summary: Add a new Comment
  *     tags: [Comments]
@@ -74,6 +74,10 @@ router4.route("/comment").get(getCommentController);
  *               commentAuthor:
  *                 type: string
  *                 example: "Author"
+ *                 required: true
+ *               userId:
+ *                 type: number
+ *                 example: 279
  *                 required: true
  *               commentDate:
  *                 type: string
@@ -127,7 +131,7 @@ router4.route("/addComment").post(upload.single("commentAuthorImage"),addComment
 
 /**
  * @swagger
- * /deleteComment:
+ * comments/deleteComment:
  *   delete:
  *     summary: Delete a comment by id
  *     tags: [Comments]
@@ -174,7 +178,7 @@ router4.route("/deleteComment").delete(deleteCommentController);
 
 /**
  * @swagger
- * /updateComment:
+ * comments/updateComment:
  *   put:
  *     summary: Update an existing comment
  *     tags: [Comments]
@@ -213,6 +217,10 @@ router4.route("/deleteComment").delete(deleteCommentController);
  *         description: Internal server error
  */
 router4.route("/updateComment").put(upload.single("commentAuthorImage"),updateCommentController);
+
+
+router4.route("/like").post(likeCommentController);
+
 
 
 

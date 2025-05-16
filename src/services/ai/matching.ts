@@ -32,7 +32,7 @@ export const getJobRecommendations = async (applicantId: number, limit: number =
     throw new Error('Applicant CV embedding not found');
   }
 
-  const cvEmbedding = cleanEmbedding(rawEmbedding); // ← Modification ici
+  const cvEmbedding = cleanEmbedding(rawEmbedding); 
   console.log('Processed embedding:', cvEmbedding);
 
   const result = await executeSQLQuery(
@@ -63,7 +63,7 @@ export const getApplicantRanking = async (jobId: number, limit: number = 50) => 
     throw new Error('Job embedding not found');
   }
 
-  const jobEmbedding = cleanEmbedding(rawEmbedding); // ← Modification ici
+  const jobEmbedding = cleanEmbedding(rawEmbedding); 
   console.log('Processed embedding:', jobEmbedding);
 
   const result = await executeSQLQuery(
@@ -74,6 +74,35 @@ export const getApplicantRanking = async (jobId: number, limit: number = 50) => 
      ORDER BY similarity_score ASC
      LIMIT $2`,
     [pgvector.toSql(jobEmbedding), limit]
+  );
+
+  return result.rows.map(row => ({
+    ...row,
+    match_score: Math.round((1 - row.similarity_score) * 100)
+  }));
+};
+export const getSimilarJobs = async (jobId: number, limit: number = 2) => {
+  const jobResult = await executeSQLQuery(
+    'SELECT job_embedding FROM public."jobTable" WHERE "jobId" = $1',
+    [jobId]
+  );
+
+  const rawEmbedding = jobResult.rows[0]?.job_embedding;
+
+  if (!rawEmbedding) {
+    throw new Error('Job embedding not found');
+  }
+
+  const jobEmbedding = cleanEmbedding(rawEmbedding);
+
+  const result = await executeSQLQuery(
+    `SELECT "jobId", "jobTitle", "companyName", description, logo, location, "jobType", field,
+      (job_embedding <=> $1) as similarity_score
+     FROM public."jobTable"
+     WHERE "jobId" != $2
+     ORDER BY similarity_score ASC
+     LIMIT $3`,
+    [pgvector.toSql(jobEmbedding), jobId, limit]
   );
 
   return result.rows.map(row => ({

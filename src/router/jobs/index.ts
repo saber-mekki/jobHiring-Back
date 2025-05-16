@@ -4,15 +4,19 @@ import {
   addJobController, 
   deleteJobController, 
   getJobController, 
-  updateJobController 
+  updateJobController,
+  getSavedJobs,
+  removeSavedJob,
+  saveJob,
 } from "../../controllers/jobs";
+import { authenticateToken } from "../../middlewares/authMiddleware";
 
 const router1 = express.Router();
 
 // Configuration de multer pour stocker les fichiers sur disque
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Sauvegarde les fichiers dans le dossier "uploads"
+    cb(null, "src/uploads/"); // Sauvegarde les fichiers dans le dossier "uploads"
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname); // Renommer le fichier pour éviter les conflits
@@ -177,5 +181,12 @@ router1.route("/deleteJob").delete(deleteJobController);
  *         description: Internal server error
  */
 router1.route("/updateJob").put(upload.single("logo"), updateJobController);
+
+
+
+router1.post("/saved-jobs", authenticateToken, saveJob);
+router1.get("/saved-jobs", authenticateToken, getSavedJobs);
+router1.delete("/saved-jobs/:jobId", authenticateToken, removeSavedJob);
+
 
 export default router1;

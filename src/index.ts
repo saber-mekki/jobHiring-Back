@@ -2,10 +2,12 @@ import express, { Application } from "express";
 import { config } from "dotenv";
 import registerRouter from "./router";
 import registerMiddlewares from "./middlewares";
+import { setupChatSocket as setupSocketHandlers } from "./sockets";
 
-const app: Application = express();
+export const app: Application = express();
 
-registerMiddlewares(app);
+// Enregistrement des middlewares retourne maintenant le serveur HTTP
+const server = registerMiddlewares(app);
 registerRouter(app);
 
 config();
@@ -13,8 +15,13 @@ config();
 const PORT: string | number = process.env.PORT || 5001;
 const ENV: string = process.env.NODE_ENV || "development";
 
-app.listen(PORT, () =>
+// Configuration des handlers Socket.IO
+setupSocketHandlers(app.locals.io);
+
+// Utilisation de server.listen au lieu de app.listen
+server.listen(PORT, () =>
   console.log(
-    ` 📡 Backend server: ` + ` Running in ${ENV} mode on port ${PORT}`
+    ` 📡 Backend server: ` + ` Running in ${ENV} mode on port ${PORT}` + 
+    ` | WebSocket: /socket.io/`
   )
 );

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getJobRecommendations, getApplicantRanking } from '../../services/ai/matching';
+import { getSimilarJobsController } from '../../controllers/jobs';
 
 const router5 = Router();
 
@@ -141,5 +142,6 @@ router5.get('/:id/applicants', async (req, res) => {
     });
   }
 });
+router5.get('/:jobId/similar-jobs', getSimilarJobsController);
 
 export default router5;

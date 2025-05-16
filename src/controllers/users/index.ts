@@ -3,9 +3,11 @@ import {
   addUser, 
   deleteUser, 
   getUser, 
+  getUserById,
   updateUser, 
   verifyEmailWithToken,
-  generateVerificationToken} from "../../services/users";
+  generateVerificationToken,
+  createReport} from "../../services/users";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import multer from "multer";
@@ -24,7 +26,7 @@ dotenv.config();
 // Configuration Multer
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../../../uploads');
+    const uploadDir = path.join(__dirname, '../../uploads');
     await fs.mkdir(uploadDir, { recursive: true });
     cb(null, uploadDir);
   },
@@ -206,6 +208,42 @@ export const getUserController = async (req: Request, res: Response) => {
   }
 };
 
+export const getUserByIdController = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    
+    // Convert to integer
+    const id = parseInt(userId, 10);
+    
+    // Validate the ID
+    if (isNaN(id)) {
+      return res.status(400).json({ 
+        error: true,
+        message: "Invalid user ID" 
+      });
+    }
+
+    const user = await getUserById(id);
+    
+    if (!user) {
+      return res.status(404).json({ 
+        error: true,
+        message: "User not found" 
+      });
+    }
+
+    res.status(200).json({ 
+      error: false,
+      data: user 
+    });
+  } catch (error) {
+    console.error("Error in getUserDetails:", error);
+    res.status(500).json({ 
+      error: true,
+      message: "Server error" 
+    });
+  }
+};
 export const addUserController = async (req: Request, res: Response) => {
   let client: PoolClient | null = null;
   let cvPath: string | null = null;
@@ -220,7 +258,7 @@ export const addUserController = async (req: Request, res: Response) => {
 
     if (cvFile) {
       cv = cvFile.filename;
-      cvPath = path.join(__dirname, '../../../uploads', cvFile.filename);
+      cvPath = path.join(__dirname, '../../uploads', cvFile.filename);
       
       const absolutePath = path.resolve(cvPath);
       if (!fsSync.existsSync(absolutePath)) {
@@ -534,4 +572,42 @@ export const updateUserController = async (req: Request, res: Response) => {
   } finally {
     client.release();
   }
+};
+export const createReportController = async (req: Request, res: Response) => {
+  try {
+    const { reported_item_type, reported_item_id, reason } = req.body;
+    
+    // Check for required fields
+    if (!reported_item_type || !reported_item_id || !reason) {
+      return res.status(400).json({
+        error: true,
+        message: "Missing required fields"
+      });
+    }
+    
+    // Get user ID from the authenticated user
+    const reporter_id = req.user.id;
+    
+    const report = await createReport({
+      reporter_id,
+      reported_item_type,
+      reported_item_id,
+      reason
+    });
+    
+    res.status(201).json({
+      error: false,
+      message: "Report submitted successfully",
+      data: report
+    });
+  } catch (error) {
+  if (error instanceof Error) {
+    res.status(error.message.includes("already reported") ? 400 : 500).json({
+      error: error.message,
+    });
+  } else {
+    res.status(500).json({ error: "Unknown error occurred" });
+  }
+}
+
 };

@@ -1,21 +1,10 @@
 import express from "express";
-import { addBlogController, deleteBlogController, getBlogController,updateBlogController } from "../../controllers/blog";
+import { addBlogController, deleteBlogController, getBlogController,updateBlogController ,uploadMiddleware } from "../../controllers/blog";
+import { authenticateToken } from "../../middlewares/authMiddleware";
 
-import multer from "multer";
 
 const router3 = express.Router();
 
-// Configuration de multer pour stocker les fichiers sur disque
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Sauvegarde les fichiers dans le dossier "uploads"
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname); // Renommer le fichier pour éviter les conflits
-  },
-});
-
-const upload = multer({ storage: storage });
 
 
 /**
@@ -124,7 +113,7 @@ router3.route("/blogs").get(getBlogController);
  *                   type: string
  *                   example: "Internal server error"
  */
-router3.route("/addBlog").post(upload.single("blogImage"),addBlogController);
+router3.route("/addBlog").post(uploadMiddleware, addBlogController);
 
 /**
  * @swagger
@@ -216,7 +205,7 @@ router3.route("/deleteBlog").delete(deleteBlogController);
  *       500:
  *         description: Internal server error
  */
-router3.route("/updateBlog").put(upload.single("blogImage"),updateBlogController);
+router3.route("/updateBlog").put(uploadMiddleware, updateBlogController);
 
 
 

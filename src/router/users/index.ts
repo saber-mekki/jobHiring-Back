@@ -5,7 +5,9 @@ import {
   getUserController,
   updateUserController,
   verifyEmailController,
-  resendVerificationEmail
+  resendVerificationEmail,
+  getUserByIdController,
+  createReportController
 } from "../../controllers/users";
 import multer from "multer";
 import path from "path";
@@ -19,7 +21,7 @@ const router = express.Router();
 // Configuration Multer avancée
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../../../uploads');
+    const uploadDir = path.join(__dirname, '../../uploads');
     await fs.mkdir(uploadDir, { recursive: true });
     cb(null, uploadDir);
   },
@@ -483,6 +485,9 @@ router.put(
   ]),
   updateUserController
 );
+router.post("/report", authenticateToken, createReportController);
 
+
+router.get("/:userId", getUserByIdController);
 
 export default router;
